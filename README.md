@@ -22,5 +22,10 @@ Script to perform operations easily on gerrit topic patches (abandon/add reviewe
                           specifies the reviewers to add to the patches
     -v, --verbose         execute with extensive logging
 
+## Setup:
 
+gerrit-topic-helper requires [pygerrit](https://github.com/sonyxperiadev/pygerrit) to run.
+One way to make sure its installed is to use pip:
+
+    pip install pygerrit
 
