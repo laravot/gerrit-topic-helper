@@ -1,13 +1,11 @@
 # gerrit-topic-helper
 Script to perform operations easily on gerrit topic patches (abandon/add reviewers/delete drafts)
 
-Gerrit topics helper
-
-usage:
+## Usage:
 
     python gerrit-topic-handler.py
 
-optional arguments:
+## Optional arguments:
 
     -h, --help            show this help message and exit
     -t TOPICS [TOPICS ...], --topics TOPICS [TOPICS ...]
