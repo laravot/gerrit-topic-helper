@@ -48,7 +48,7 @@ client = GerritSSHClient("gerrit.ovirt.org")
 
 def run_gerrit_command(command):
         try:
-                client.run_gerrit_command(command)
+                return client.run_gerrit_command(command)
         except Exception as e:
                 print 'Error when running gerrint command:', e
 
