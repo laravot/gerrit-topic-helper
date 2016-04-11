@@ -52,7 +52,7 @@ def run_gerrit_command(command):
         except Exception as e:
                 print 'Error when running gerrit command:', e
 
-query = "query --format=JSON status:open --current-patch-set limit:1"
+query = "query --format=JSON status:open --current-patch-set"
 query = applyOrProp(d, query, "owner", "owners")
 query = applyOrProp(d, query, "topic", "topics")
 query = applyOrProp(d, query, "project", "projects")
