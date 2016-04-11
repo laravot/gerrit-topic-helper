@@ -12,6 +12,7 @@ parser.add_argument('-o', '--owners', nargs='+', help='specifies the owners of t
 parser.add_argument('-p', '--projects', nargs='+', help='specifies the projects', required=True)
 parser.add_argument('-r', '--reviewers', nargs='+', help='specifies the reviewers to add to the patches')
 parser.add_argument('-v', '--verbose', action='store_true', help='execute with extensive logging')
+parser.add_argument('-cr', '--code-review', dest='codeReview', help='code review to apply')
 parser.set_defaults(abandon=False)
 
 args = parser.parse_args()
@@ -63,6 +64,7 @@ data = data[:-1]
 
 
 reviewers = safeGet("reviewers", d)
+review = safeGet("codeReview", d)
 for line in data:
 	parsed=json.loads(line)
 	print parsed
@@ -73,6 +75,9 @@ for line in data:
 		reviewers_com+="--add ".join(reviewers)
 		log.debug("adding reviewers using command %s", reviewers_com)
 		run_gerrit_command(client, reviewers_com)
+
+	if review:
+
 
 	deleteDrafts = safeGet("deleteDrafts", d)
 	abandon = safeGet("abandon", d)
