@@ -50,7 +50,7 @@ def run_gerrit_command(command):
         try:
                 return client.run_gerrit_command(command)
         except Exception as e:
-                print 'Error when running gerrint command:', e
+                print 'Error when running gerrit command:', e
 
 query = "query --format=JSON status:open --current-patch-set limit:1"
 query = applyOrProp(d, query, "owner", "owners")
