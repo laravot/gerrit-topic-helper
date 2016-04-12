@@ -54,15 +54,17 @@ def run_gerrit_command(command):
         except Exception as e:
                 print 'Error when running gerrit command:', e
 
-query = "query --format=JSON status:open --current-patch-set"
-query = applyOrProp(d, query, "owner", "owners")
-query = applyOrProp(d, query, "topic", "topics")
-query = applyOrProp(d, query, "project", "projects")
-log.info("Running query %s", query)
-result = run_gerrit_command(query)
-data = result.stdout.readlines()
-data = data[:-1]
+def get_topic_changes(d):
+	query = "query --format=JSON status:open --current-patch-set"
+	query = applyOrProp(d, query, "owner", "owners")
+	query = applyOrProp(d, query, "topic", "topics")
+	query = applyOrProp(d, query, "project", "projects")
+	log.info("Running query %s", query)
+	query_result = run_gerrit_command(query)
+	result = query_result.stdout.readlines()
+	return result[:-1]
 
+data = get_topic_changes(d)
 
 reviewers = safeGet("reviewers", d)
 code_review = safeGet("codeReview", d)
