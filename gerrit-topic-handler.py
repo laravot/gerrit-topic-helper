@@ -13,6 +13,7 @@ parser.add_argument('-p', '--projects', nargs='+', help='specifies the projects'
 parser.add_argument('-r', '--reviewers', nargs='+', help='specifies the reviewers to add to the patches')
 parser.add_argument('-v', '--verbose', action='store_true', help='execute with extensive logging')
 parser.add_argument('-cr', '--code-review', dest='codeReview', help='code review to apply')
+parser.add_argument('-vr', '--verified', dest='verified', help='verified review to apply')
 parser.set_defaults(abandon=False)
 
 args = parser.parse_args()
@@ -49,11 +50,11 @@ client = GerritSSHClient("gerrit.ovirt.org")
 
 def run_gerrit_command(command):
         try:
-                client.run_gerrit_command(command)
+                return client.run_gerrit_command(command)
         except Exception as e:
-                print 'Error when running gerrint command:', e
+                print 'Error when running gerrit command:', e
 
-query = "query --format=JSON status:open --current-patch-set limit:1"
+query = "query --format=JSON status:open --current-patch-set"
 query = applyOrProp(d, query, "owner", "owners")
 query = applyOrProp(d, query, "topic", "topics")
 query = applyOrProp(d, query, "project", "projects")
@@ -64,7 +65,9 @@ data = data[:-1]
 
 
 reviewers = safeGet("reviewers", d)
-review = safeGet("codeReview", d)
+code_review = safeGet("codeReview", d)
+verified = safeGet("verified", d)
+
 for line in data:
 	parsed=json.loads(line)
 	print parsed
@@ -76,8 +79,12 @@ for line in data:
 		log.debug("adding reviewers using command %s", reviewers_com)
 		run_gerrit_command(client, reviewers_com)
 
-	if review:
+	review_com = "review"
+	if code_review:
+		review_com+=" --code-review {} {}".format(code_review, commit)
 
+	if verified:
+		review_com+=" --verified {} {}".format(verified, commit)
 
 	deleteDrafts = safeGet("deleteDrafts", d)
 	abandon = safeGet("abandon", d)
@@ -85,10 +92,12 @@ for line in data:
 		if parsed["status"]=="DRAFT":
 			if deleteDrafts:
 				log.debug("deleting draft commit %s", commit)
-				client.run_gerrit_command("review --delete {}".format(commit))
+				review_com.append(" --delete {}".format(commit))
 				continue
 			log.debug("publishing draft commit %s", commit)
-			client.run_gerrit_command("review --publish {}".format(commit))
+			review_com+=" --publish {}".format(commit)
 		if abandon:
 			log.debug("abandoning %s", commit)
-			client.run_gerrit_command("review --abandon {}".format(commit))
+			review_com+=" --abandon {}".format(commit)
+	log.debug("running git review command %s", review_com)
+	client.run_gerrit_command(review_com)
