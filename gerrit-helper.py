@@ -20,7 +20,7 @@ gerrit_topic_parser.add_argument('-t','--topics', nargs='+', help='topics to per
 gerrit_topic_parser.add_argument('-o', '--owners', nargs='+', help='specifies the owners of the patches', required=True)
 gerrit_topic_parser.add_argument('-pr', '--projects', nargs='+', help='specifies the projects', required=True)
 
-current_branch_parser = subparsers.add_parser('current-branch', help='Current branch')
+current_branch_parser = subparsers.add_parser('current-branch', help='Current local branch')
 current_branch_parser.add_argument('-p', '--path',  dest='path', help='path', required=True)
 current_branch_parser.add_argument('-fc', '--first-commit',  dest='firstCommit', help='first commit to perform on, '
 																					  'inclusive', required=True)
